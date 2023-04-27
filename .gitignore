@@ -1,2 +1,5 @@
 result
 .direnv
+estimations
+segments.txt
+.features_msaf_tmp.json

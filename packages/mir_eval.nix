@@ -1,6 +1,13 @@
-{ lib, buildPythonPackage, fetchPypi, fetchFromGitHub, python3Packages }:
+{ stdenv
+, lib
+, buildPythonPackage
+, fetchPypi
+, fetchFromGitHub
+, python3Packages
+}:
 buildPythonPackage {
   name = "mir_eval";
+  format = "setuptools";
 
   src = fetchPypi {
     pname = "mir_eval";
@@ -8,19 +15,17 @@ buildPythonPackage {
     hash = "sha256-4f66pXZsZadUXCoXCyQUkPR6mJhzcLHgZ0JCTF3r5l4=";
   };
 
-  nativeBuildInputs = [
-    python3Packages.future
-    python3Packages.six
+  propagatedBuildInputs = with python3Packages; [
+    future
+    six
+    numpy
+    scipy
+    matplotlib
   ];
 
-  propagatedBuildInputs = [
-    python3Packages.numpy
-    python3Packages.scipy
-    python3Packages.matplotlib
+  pythonImportsCheck = [
+    "mir_eval"
   ];
-
-  # TODO Fix tests.
-  doCheck = false;
 
   meta = {
     description = "Common metrics for common audio/music processing tasks";

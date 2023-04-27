@@ -1,6 +1,18 @@
-{ lib, buildPythonPackage, fetchPypi, fetchFromGitHub, python3Packages, mir_eval, jams, ffmpeg, vmo, libsndfile }:
+{ stdenv
+, lib
+, buildPythonPackage
+, fetchPypi
+, fetchFromGitHub
+, python3Packages
+, mir_eval
+, jams
+, ffmpeg
+, vmo
+, libsndfile
+}:
 buildPythonPackage {
   name = "msaf";
+  format = "setuptools";
 
   src = fetchFromGitHub {
     owner = "urinieto";
@@ -13,16 +25,9 @@ buildPythonPackage {
     ./remove_enum34.patch
   ];
 
-  nativeBuildInputs = [
-    #setuptools_scm
-  ];
-
   propagatedBuildInputs = with python3Packages; [
     cvxopt
-    enum-compat
-    enum34
     ffmpeg
-    future
     jams
     librosa
     libsndfile
@@ -30,15 +35,13 @@ buildPythonPackage {
     numpy
     scikit-learn
     seaborn
-    types-enum34
     vmo
   ];
 
-  checkInputs = [
-    python3Packages.pytest
+  pythonImportsCheck = [
+    "msaf"
   ];
 
-  # TODO Fix tests.
   doCheck = false;
 
   meta = {

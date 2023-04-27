@@ -1,6 +1,13 @@
-{ lib, buildPythonPackage, fetchPypi, fetchFromGitHub, python3Packages, mir_eval }:
+{ lib
+, buildPythonPackage
+, fetchPypi
+, fetchFromGitHub
+, python3Packages
+, mir_eval
+}:
 buildPythonPackage {
   name = "jams";
+  format = "setuptools";
 
   src = fetchPypi {
     pname = "jams";
@@ -8,20 +15,18 @@ buildPythonPackage {
     hash = "sha256-i7IVi9GbTwV7i5AyG0Sx3RZZxmy+vg1CGYidMdf4iLk=";
   };
 
-  nativeBuildInputs = [
-    python3Packages.future
-    python3Packages.six
-  ];
-
-  propagatedBuildInputs = [
-    python3Packages.pandas
-    python3Packages.jsonschema
-    python3Packages.decorator
-    python3Packages.sortedcontainers
+  propagatedBuildInputs = with python3Packages; [
+    pandas
+    jsonschema
+    decorator
+    sortedcontainers
     mir_eval
   ];
 
-  # TODO Fix tests.
+  pythonImportsCheck = [
+    "jams"
+  ];
+
   doCheck = false;
 
   meta = {

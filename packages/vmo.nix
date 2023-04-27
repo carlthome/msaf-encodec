@@ -1,6 +1,13 @@
-{ lib, buildPythonPackage, fetchPypi, fetchFromGitHub, python3Packages }:
+{ stdenv
+, lib
+, buildPythonPackage
+, fetchPypi
+, fetchFromGitHub
+, python3Packages
+}:
 buildPythonPackage {
   name = "vmo";
+  format = "setuptools";
 
   src = fetchPypi {
     pname = "vmo";
@@ -8,16 +15,19 @@ buildPythonPackage {
     hash = "sha256-yXt+a7a3JM3aSy8usgCKzab4JK5lTQR1AiMEcFdjNdY=";
   };
 
-  nativeBuildInputs = [
-    python3Packages.setuptools_scm
+  propagatedBuildInputs = with python3Packages; [
+    numpy
+    scipy
+    librosa
   ];
 
-  propagatedBuildInputs = [
-
+  pythonImportsCheck = [
+    "vmo"
   ];
 
-  # TODO Fix tests.
-  doCheck = false;
+  nativeCheckInputs = with python3Packages; [
+    unittestCheckHook
+  ];
 
   meta = {
     description = "Python Modules of Variable Markov Oracle";

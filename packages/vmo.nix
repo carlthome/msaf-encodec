@@ -1,11 +1,11 @@
-{ stdenv
+{ pkgs
+, stdenv
 , lib
-, buildPythonPackage
 , fetchPypi
 , fetchFromGitHub
 , python3Packages
 }:
-buildPythonPackage {
+pkgs.python3Packages.buildPythonPackage {
   name = "vmo";
   format = "setuptools";
 

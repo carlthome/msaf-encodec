@@ -9,33 +9,50 @@
   outputs = { self, nixpkgs, flake-utils }: flake-utils.lib.eachDefaultSystem (system:
     let
       pkgs = nixpkgs.legacyPackages.${system};
-      buildPythonPackage = pkgs.python3Packages.buildPythonPackage;
-      buildPythonApplication = pkgs.python3Packages.buildPythonApplication;
     in
     {
-      packages = rec {
-        vmo = pkgs.callPackage ./packages/vmo.nix { inherit buildPythonPackage; };
-        mir_eval = pkgs.callPackage ./packages/mir_eval.nix { inherit buildPythonPackage; };
-        jams = pkgs.callPackage ./packages/jams.nix { inherit buildPythonPackage; inherit mir_eval; };
-        msaf = pkgs.callPackage ./packages/msaf.nix { inherit buildPythonPackage; inherit mir_eval; inherit jams; inherit vmo; };
-        pythonEnvironment = (pkgs.python3.withPackages (ps: [
-          ps.ipython
-          mir_eval
-        ]));
-        main = pkgs.writers.writePython3Bin "main" { libraries = [ msaf ]; } (builtins.readFile ./main.py);
-        default = main;
-      };
+      packages =
+        rec {
+          encodec = pkgs.callPackage ./packages/encodec.nix { };
+          pedalboard = pkgs.callPackage ./packages/pedalboard.nix { };
+          vmo = pkgs.callPackage ./packages/vmo.nix { };
+          mir_eval = pkgs.callPackage ./packages/mir_eval.nix { };
+          jams = pkgs.callPackage ./packages/jams.nix { inherit mir_eval; };
+          msaf = pkgs.callPackage ./packages/msaf.nix { inherit mir_eval; inherit jams; inherit vmo; };
+
+          pythonEnvironment = (pkgs.python3.withPackages (ps: [
+            encodec
+            pedalboard
+            vmo
+            mir_eval
+            jams
+            msaf
+          ]));
+
+          main =
+            let
+              name = "main";
+              settings = { libraries = [ msaf encodec ]; };
+              script = builtins.readFile ./main.py;
+            in
+            pkgs.writers.writePython3Bin name settings script;
+
+          default = main;
+        };
 
       apps = {
         default = {
           type = "app";
-          program = "${self.packages.${system}.main}/bin/main";
+          program = "${self.packages.${system}.default}/bin/main";
         };
       };
 
       devShells = {
         default = pkgs.mkShell {
-          buildInputs = [ self.packages.${system}.pythonEnvironment ];
+          buildInputs = [
+            self.packages.${system}.pythonEnvironment
+            pkgs.pre-commit
+          ];
         };
       };
 

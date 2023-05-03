@@ -1,6 +1,6 @@
-{ stdenv
+{ pkgs
+, stdenv
 , lib
-, buildPythonPackage
 , fetchPypi
 , fetchFromGitHub
 , python3Packages
@@ -10,7 +10,7 @@
 , vmo
 , libsndfile
 }:
-buildPythonPackage {
+pkgs.python3Packages.buildPythonPackage {
   name = "msaf";
   format = "setuptools";
 

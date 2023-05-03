@@ -1,11 +1,12 @@
-{ lib
-, buildPythonPackage
+{ pkgs
+, stdenv
+, lib
 , fetchPypi
 , fetchFromGitHub
 , python3Packages
 , mir_eval
 }:
-buildPythonPackage {
+pkgs.python3Packages.buildPythonPackage {
   name = "jams";
   format = "setuptools";
 

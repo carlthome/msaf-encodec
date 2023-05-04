@@ -52,6 +52,7 @@
           buildInputs = [
             self.packages.${system}.pythonEnvironment
             pkgs.pre-commit
+            pkgs.python3Packages.ipykernel
           ];
         };
       };

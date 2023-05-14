@@ -49,11 +49,12 @@
 
       devShells = {
         default = pkgs.mkShell {
-          buildInputs = [
+          packages = with pkgs; [
             self.packages.${system}.pythonEnvironment
-            pkgs.pre-commit
-            pkgs.python3Packages.ipykernel
-          ];
+            pre-commit
+            jupyter
+            black
+          ] ++ black.optional-dependencies.jupyter;
         };
       };
 

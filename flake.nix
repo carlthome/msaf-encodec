@@ -16,15 +16,14 @@
           encodec = pkgs.callPackage ./packages/encodec.nix { };
           pedalboard = pkgs.callPackage ./packages/pedalboard.nix { };
           vmo = pkgs.callPackage ./packages/vmo.nix { };
-          mir_eval = pkgs.callPackage ./packages/mir_eval.nix { };
-          jams = pkgs.callPackage ./packages/jams.nix { inherit mir_eval; };
-          msaf = pkgs.callPackage ./packages/msaf.nix { inherit mir_eval; inherit jams; inherit vmo; };
+          jams = pkgs.callPackage ./packages/jams.nix { };
+          msaf = pkgs.callPackage ./packages/msaf.nix { inherit jams; inherit vmo; };
 
           pythonEnvironment = (pkgs.python3.withPackages (ps: [
             encodec
             pedalboard
             vmo
-            mir_eval
+            ps.mir_eval
             jams
             msaf
           ]));

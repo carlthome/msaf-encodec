@@ -4,7 +4,6 @@
 , fetchPypi
 , fetchFromGitHub
 , python3Packages
-, mir_eval
 , jams
 , ffmpeg
 , vmo

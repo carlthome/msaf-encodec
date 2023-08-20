@@ -4,7 +4,6 @@
 , fetchPypi
 , fetchFromGitHub
 , python3Packages
-, mir_eval
 }:
 pkgs.python3Packages.buildPythonPackage {
   name = "jams";

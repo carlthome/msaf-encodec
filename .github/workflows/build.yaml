@@ -1,4 +1,5 @@
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -9,3 +10,7 @@ on:
 jobs:
   build:
     uses: carlthome/workflows/.github/workflows/nix.yaml@main
+    with:
+      cachix-cache: msaf-encodec
+    secrets:
+      cachix-token: ${{ secrets.CACHIX_AUTH_TOKEN }}
